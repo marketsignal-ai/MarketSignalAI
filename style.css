@@ -1,0 +1,68 @@
+body {
+    margin: 0;
+    padding: 30px;
+    font-family: "Yu Gothic UI", sans-serif;
+    background: #eef3f8;
+}
+
+.container {
+    max-width: 480px;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #222;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+
+.card h2,
+.card h3 {
+    margin-top: 0;
+}
+
+.weather {
+    font-size: 60px;
+    font-weight: bold;
+    text-align: center;
+    margin: 15px 0;
+}
+
+.risk {
+    text-align: center;
+    font-size: 22px;
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+p {
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+.weather-card{
+
+    background: linear-gradient(135deg,#4facfe,#00c6fb);
+
+    color:white;
+
+}
+
+.weather-card .risk{
+
+    color:white;
+
+}
+
+.weather-card h2{
+
+    color:white;
+
+}
