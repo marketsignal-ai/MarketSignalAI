@@ -10,5 +10,9 @@
   "sp500_200ma_diff": 8.08,
   "yield_curve": 0.41,
   "high_yield_spread": 2.65,
-  "initial_claims": 206000
+  "initial_claims": 206000,
+  "sp500_daily_change": -0.38,
+  "vix_daily_change": -5.79,
+  "high_yield_daily_change": -0.01,
+  "sudden_score": 0
 }
