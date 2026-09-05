@@ -130,6 +130,8 @@ if (data.high_yield_spread >= 6) {
   reasons.push("信用市場に警戒感");
 }
 
+// 急変スコアを加算
+score += Number(data.sudden_score || 0);
 
 // ===== 総合判定 =====
 
@@ -139,25 +141,25 @@ let comment;
 let action1;
 let action2;
 
-if (score >= 7) {
+if (score >= 10) {
   weather = "⛈️ 危険";
   risk = "非常に高い";
   comment =
-    "複数の市場指標が強い警戒シグナルを示しています。";
+    "複数の市場指標と急変シグナルが強い警戒状態を示しています。";
 
   action1 = "新規投資は慎重に";
   action2 = "売買判断は急がず確認";
 
-} else if (score >= 5) {
+} else if (score >= 7) {
   weather = "🌧️ 警戒";
   risk = "高い";
   comment =
-    "市場ストレスが高まっています。値動きに注意してください。";
+    "市場ストレスまたは急変シグナルが高まっています。";
 
   action1 = "積立は継続";
   action2 = "追加投資は慎重に";
 
-} else if (score >= 3) {
+} else if (score >= 4) {
   weather = "☁️ 注意";
   risk = "中程度";
   comment =
@@ -176,6 +178,7 @@ if (score >= 7) {
   action2 = "売却不要";
 }
 
+
 // ===== 画面表示 =====
 
 document.getElementById("weather").textContent = weather;
@@ -184,7 +187,7 @@ document.getElementById("risk").textContent =
   "市場リスク：" + risk;
 
 document.getElementById("riskScore").textContent =
-  "Market Risk Score： " + score + " / 9";
+  "Market Risk Score： " + score + " / 15";
 
 document.getElementById("action1").textContent =
   action1;
