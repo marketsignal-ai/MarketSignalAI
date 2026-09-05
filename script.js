@@ -221,6 +221,38 @@ hyChangeElement.style.color =
 
 const suddenElement = document.getElementById("suddenScore");
 
+let suddenReasons = [];
+
+// S&P500
+if (data.sp500_daily_change <= -3) {
+  suddenReasons.push("・S&P500が3%以上下落 → 2点");
+} else if (data.sp500_daily_change <= -2) {
+  suddenReasons.push("・S&P500が2%以上下落 → 1点");
+} else {
+  suddenReasons.push("・S&P500の急落なし → 0点");
+}
+
+// VIX
+if (data.vix_daily_change >= 30) {
+  suddenReasons.push("・VIXが30%以上上昇 → 2点");
+} else if (data.vix_daily_change >= 15) {
+  suddenReasons.push("・VIXが15%以上上昇 → 1点");
+} else {
+  suddenReasons.push("・VIXの急上昇なし → 0点");
+}
+
+// HYスプレッド
+if (data.high_yield_daily_change >= 0.50) {
+  suddenReasons.push("・HYスプレッドが0.50%以上拡大 → 2点");
+} else if (data.high_yield_daily_change >= 0.25) {
+  suddenReasons.push("・HYスプレッドが0.25%以上拡大 → 1点");
+} else {
+  suddenReasons.push("・信用スプレッドの急拡大なし → 0点");
+}
+
+document.getElementById("suddenReasons").textContent =
+  suddenReasons.join("\n");
+
 if (data.sudden_score <= 1) {
   suddenElement.style.color = "green";
 } else if (data.sudden_score <= 3) {
