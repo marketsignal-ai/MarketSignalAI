@@ -62,6 +62,24 @@ fetch("market.json")
 
     document.getElementById("sp500_200ma_diff").textContent =
       "200日線乖離率： " + data.sp500_200ma_diff + "%";
+
+    const vixElement = document.getElementById("vix");
+    const diffElement = document.getElementById("sp500_200ma_diff");
+
+    if (data.vix < 20) {
+      vixElement.style.color = "green";
+    } else if (data.vix < 30) {
+      vixElement.style.color = "orange";
+    } else {
+      vixElement.style.color = "red";
+    }
+
+    if (data.sp500_200ma_diff >= 0) {
+      diffElement.style.color = "green";
+    } else {
+      diffElement.style.color = "red";
+    }
+
   })
   .catch(error => {
     console.error("market.json 読み込みエラー:", error);
