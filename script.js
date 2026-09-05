@@ -165,6 +165,8 @@ document.getElementById("weather").textContent = weather;
 document.getElementById("risk").textContent =
   "リスク：" + risk;
 
+document.getElementById("riskScore").textContent =
+  "Market Risk Score： " + score + " / 9";
 
   })
   .catch(error => {
