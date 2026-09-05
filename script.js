@@ -192,6 +192,33 @@ document.getElementById("riskScore").textContent =
 document.getElementById("suddenScore").textContent =
   "急変スコア： " + data.sudden_score + " / 6";  
 
+document.getElementById("sp500Change").textContent =
+  "S&P500 前日比： " + data.sp500_daily_change + "%";
+
+document.getElementById("vixChange").textContent =
+  "VIX 前日比： " + data.vix_daily_change + "%";
+
+document.getElementById("hyChange").textContent =
+  "HYスプレッド前日差： " + data.high_yield_daily_change + "%";
+
+const sp500ChangeElement =
+  document.getElementById("sp500Change");
+
+const vixChangeElement =
+  document.getElementById("vixChange");
+
+const hyChangeElement =
+  document.getElementById("hyChange");
+
+sp500ChangeElement.style.color =
+  data.sp500_daily_change >= 0 ? "green" : "red";
+
+vixChangeElement.style.color =
+  data.vix_daily_change <= 0 ? "green" : "red";
+
+hyChangeElement.style.color =
+  data.high_yield_daily_change <= 0 ? "green" : "red";
+
 const suddenElement = document.getElementById("suddenScore");
 
 if (data.sudden_score <= 1) {
