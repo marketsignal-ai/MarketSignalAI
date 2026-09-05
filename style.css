@@ -66,3 +66,8 @@ p {
     color:white;
 
 }
+
+#riskReasons {
+  white-space: pre-line;
+  line-height: 1.8;
+}
