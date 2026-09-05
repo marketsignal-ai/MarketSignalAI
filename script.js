@@ -63,6 +63,16 @@ fetch("market.json")
     document.getElementById("sp500_200ma_diff").textContent =
       "200日線乖離率： " + data.sp500_200ma_diff + "%";
 
+    document.getElementById("yield_curve").textContent =
+      "長短金利差（10年-2年）： " + data.yield_curve + "%";
+
+    document.getElementById("high_yield_spread").textContent =
+      "ハイイールド債スプレッド： " + data.high_yield_spread + "%";
+
+    document.getElementById("initial_claims").textContent =
+      "新規失業保険申請件数： " +
+       Number(data.initial_claims).toLocaleString() + "件";  
+
     const vixElement = document.getElementById("vix");
     const diffElement = document.getElementById("sp500_200ma_diff");
 
