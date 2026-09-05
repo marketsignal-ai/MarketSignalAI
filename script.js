@@ -195,6 +195,76 @@ document.getElementById("action2").textContent =
 document.getElementById("aiComment").textContent =
   comment;
 
+// ===== 市場状況 =====
+
+// 市場トレンド
+let trendStatus;
+
+if (data.sp500_200ma_diff >= 0) {
+  trendStatus = "🟢 市場トレンド";
+} else if (data.sp500_200ma_diff >= -5) {
+  trendStatus = "🟡 市場トレンド";
+} else {
+  trendStatus = "🔴 市場トレンド";
+}
+
+
+// 市場心理
+let sentimentStatus;
+
+if (data.vix < 20) {
+  sentimentStatus = "🟢 市場心理";
+} else if (data.vix < 30) {
+  sentimentStatus = "🟡 市場心理";
+} else {
+  sentimentStatus = "🔴 市場心理";
+}
+
+
+// 景気
+let economyStatus;
+
+if (
+  data.yield_curve >= 0 &&
+  data.initial_claims < 300000
+) {
+  economyStatus = "🟢 景気";
+} else if (
+  data.yield_curve >= -0.5 &&
+  data.initial_claims < 350000
+) {
+  economyStatus = "🟡 景気";
+} else {
+  economyStatus = "🔴 景気";
+}
+
+
+// 為替
+let fxStatus;
+
+if (data.usdjpy < 150) {
+  fxStatus = "🟢 為替";
+} else if (data.usdjpy < 160) {
+  fxStatus = "🟡 為替";
+} else {
+  fxStatus = "🔴 為替";
+}
+
+
+// 画面に表示
+document.getElementById("trendStatus").textContent =
+  trendStatus;
+
+document.getElementById("sentimentStatus").textContent =
+  sentimentStatus;
+
+document.getElementById("economyStatus").textContent =
+  economyStatus;
+
+document.getElementById("fxStatus").textContent =
+  fxStatus;
+
+
 })
 .catch(error => {
   console.error("market.json 読み込みエラー:", error);
