@@ -89,51 +89,55 @@ fetch("market.json")
     } else {
       diffElement.style.color = "red";
     }
-// ===== Market Risk Score =====
 
-let score = 0;
+// ===== Base Risk Score =====
+
+let baseScore = 0;
 let reasons = [];
 
 // VIX
 if (data.vix >= 30) {
-  score += 3;
+  baseScore += 3;
   reasons.push("VIXが30以上");
 } else if (data.vix >= 25) {
-  score += 2;
+  baseScore += 2;
   reasons.push("VIXが25以上");
 } else if (data.vix >= 20) {
-  score += 1;
+  baseScore += 1;
   reasons.push("VIXが20以上");
 }
 
 // S&P500と200日移動平均
 if (data.sp500_200ma_diff <= -10) {
-  score += 3;
+  baseScore += 3;
   reasons.push("S&P500が200日線を10%以上下回る");
 } else if (data.sp500_200ma_diff <= -5) {
-  score += 2;
+  baseScore += 2;
   reasons.push("S&P500が200日線を5%以上下回る");
 } else if (data.sp500_200ma_diff < 0) {
-  score += 1;
+  baseScore += 1;
   reasons.push("S&P500が200日線を下回る");
 }
 
-// ハイイールド債スプレッド
+// HYスプレッド
 if (data.high_yield_spread >= 6) {
-  score += 3;
+  baseScore += 3;
   reasons.push("信用市場のストレスが非常に高い");
 } else if (data.high_yield_spread >= 5) {
-  score += 2;
+  baseScore += 2;
   reasons.push("信用市場のストレスが高い");
 } else if (data.high_yield_spread >= 4) {
-  score += 1;
+  baseScore += 1;
   reasons.push("信用市場に警戒感");
 }
 
-// 急変スコアを加算
-score += Number(data.sudden_score || 0);
 
-// ===== 総合判定 =====
+// ===== Sudden Risk Score =====
+
+const suddenScore = Number(data.sudden_score || 0);
+
+
+// ===== Final Risk =====
 
 let weather;
 let risk;
@@ -141,34 +145,38 @@ let comment;
 let action1;
 let action2;
 
-if (score >= 10) {
+if (baseScore >= 7 || suddenScore >= 5) {
+
   weather = "⛈️ 危険";
   risk = "非常に高い";
   comment =
-    "複数の市場指標と急変シグナルが強い警戒状態を示しています。";
+    "市場ストレスまたは急変シグナルが強く出ています。";
 
   action1 = "新規投資は慎重に";
-  action2 = "売買判断は急がず確認";
+  action2 = "市場状況を毎日確認";
 
-} else if (score >= 7) {
+} else if (baseScore >= 5 || suddenScore >= 3) {
+
   weather = "🌧️ 警戒";
   risk = "高い";
   comment =
-    "市場ストレスまたは急変シグナルが高まっています。";
+    "市場に警戒シグナルが出ています。";
 
   action1 = "積立は継続";
   action2 = "追加投資は慎重に";
 
-} else if (score >= 4) {
+} else if (baseScore >= 3 || suddenScore >= 2) {
+
   weather = "☁️ 注意";
   risk = "中程度";
   comment =
-    "一部の指標に警戒シグナルが出ています。";
+    "一部の指標に注意が必要です。";
 
   action1 = "積立継続";
   action2 = "市場の変化を確認";
 
 } else {
+
   weather = "☀️ 晴れ";
   risk = "低い";
   comment =
