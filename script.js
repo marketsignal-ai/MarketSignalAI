@@ -176,17 +176,26 @@ if (score >= 7) {
   action2 = "売却不要";
 }
 
-
 // ===== 画面表示 =====
 
 document.getElementById("weather").textContent = weather;
+
 document.getElementById("risk").textContent =
-  "リスク：" + risk;
+  "市場リスク：" + risk;
 
 document.getElementById("riskScore").textContent =
   "Market Risk Score： " + score + " / 9";
 
-  })
-  .catch(error => {
-    console.error("market.json 読み込みエラー:", error);
-  });
+document.getElementById("action1").textContent =
+  action1;
+
+document.getElementById("action2").textContent =
+  action2;
+
+document.getElementById("aiComment").textContent =
+  comment;
+
+})
+.catch(error => {
+  console.error("market.json 読み込みエラー:", error);
+});
