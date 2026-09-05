@@ -16,9 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get market data
+      - name: Get S&P500 from FRED
         env:
-          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
           python - <<'PY'
           import json
@@ -26,63 +26,43 @@ jobs:
           import urllib.request
           import urllib.parse
 
-          api_key = os.environ["ALPHA_VANTAGE_API_KEY"]
+          api_key = os.environ["FRED_API_KEY"]
 
-          # -------------------------
-          # SPY
-          # -------------------------
-          spy_params = urllib.parse.urlencode({
-              "function": "GLOBAL_QUOTE",
-              "symbol": "SPY",
-              "apikey": api_key
+          params = urllib.parse.urlencode({
+              "series_id": "SP500",
+              "api_key": api_key,
+              "file_type": "json",
+              "sort_order": "desc",
+              "limit": 10
           })
 
-          spy_url = "https://www.alphavantage.co/query?" + spy_params
+          url = "https://api.stlouisfed.org/fred/series/observations?" + params
 
-          with urllib.request.urlopen(spy_url) as response:
-              spy_data = json.load(response)
+          with urllib.request.urlopen(url) as response:
+              data = json.load(response)
 
-          spy_quote = spy_data.get("Global Quote", {})
-          spy_price = spy_quote.get("05. price")
+          observations = data.get("observations", [])
 
-          if not spy_price:
-              raise RuntimeError(f"SPY data could not be obtained: {spy_data}")
+          sp500_value = None
 
-          # -------------------------
-          # USD / JPY
-          # -------------------------
-          fx_params = urllib.parse.urlencode({
-              "function": "CURRENCY_EXCHANGE_RATE",
-              "from_currency": "USD",
-              "to_currency": "JPY",
-              "apikey": api_key
-          })
+          for obs in observations:
+              value = obs.get("value")
+              if value and value != ".":
+                  sp500_value = float(value)
+                  break
 
-          fx_url = "https://www.alphavantage.co/query?" + fx_params
+          if sp500_value is None:
+              raise RuntimeError(f"S&P500 data could not be obtained: {data}")
 
-          with urllib.request.urlopen(fx_url) as response:
-              fx_data = json.load(response)
-
-          fx_quote = fx_data.get("Realtime Currency Exchange Rate", {})
-          usd_jpy = fx_quote.get("5. Exchange Rate")
-
-          if not usd_jpy:
-              raise RuntimeError(f"USD/JPY data could not be obtained: {fx_data}")
-
-          # -------------------------
-          # market.json 更新
-          # -------------------------
           with open("market.json", "r", encoding="utf-8") as f:
               market = json.load(f)
 
-          market["sp500"] = round(float(spy_price), 2)
-          market["usdjpy"] = round(float(usd_jpy), 2)
+          market["sp500"] = round(sp500_value, 2)
 
           with open("market.json", "w", encoding="utf-8") as f:
               json.dump(market, f, ensure_ascii=False, indent=2)
 
-          print("SPY:", market["sp500"])
-          print("USDJPY:", market["usdjpy"])
+          print("S&P500:", market["sp500"])
           PY
 
       - name: Commit and push
