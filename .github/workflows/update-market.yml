@@ -1,0 +1,63 @@
+name: Update Market Data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 6 * * 1-5"
+
+jobs:
+  update-market:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get market data
+        env:
+          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          api_key = os.environ["ALPHA_VANTAGE_API_KEY"]
+
+          url = (
+              "https://www.alphavantage.co/query"
+              "?function=GLOBAL_QUOTE"
+              "&symbol=SPY"
+              f"&apikey={api_key}"
+          )
+
+          with urllib.request.urlopen(url) as response:
+              data = json.load(response)
+
+          quote = data.get("Global Quote", {})
+          price = quote.get("05. price")
+
+          if not price:
+              raise RuntimeError(f"S&P500 data could not be obtained: {data}")
+
+          with open("market.json", "r", encoding="utf-8") as f:
+              market = json.load(f)
+
+          market["sp500"] = round(float(price), 2)
+
+          with open("market.json", "w", encoding="utf-8") as f:
+              json.dump(market, f, ensure_ascii=False, indent=2)
+
+          print("Updated:", market["sp500"])
+          PY
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add market.json
+          git diff --cached --quiet || git commit -m "Update market data"
+          git push
