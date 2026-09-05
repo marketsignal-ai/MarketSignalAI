@@ -136,28 +136,46 @@ if (data.high_yield_spread >= 6) {
 let weather;
 let risk;
 let comment;
+let action1;
+let action2;
 
 if (score >= 7) {
   weather = "⛈️ 危険";
   risk = "非常に高い";
   comment =
     "複数の市場指標が強い警戒シグナルを示しています。";
+
+  action1 = "新規投資は慎重に";
+  action2 = "売買判断は急がず確認";
+
 } else if (score >= 5) {
   weather = "🌧️ 警戒";
   risk = "高い";
   comment =
     "市場ストレスが高まっています。値動きに注意してください。";
+
+  action1 = "積立は継続";
+  action2 = "追加投資は慎重に";
+
 } else if (score >= 3) {
   weather = "☁️ 注意";
   risk = "中程度";
   comment =
     "一部の指標に警戒シグナルが出ています。";
+
+  action1 = "積立継続";
+  action2 = "市場の変化を確認";
+
 } else {
   weather = "☀️ 晴れ";
   risk = "低い";
   comment =
     "主要な市場ストレス指標は現在落ち着いています。";
+
+  action1 = "積立継続";
+  action2 = "売却不要";
 }
+
 
 // ===== 画面表示 =====
 
