@@ -37,7 +37,11 @@ jobs:
                   "limit": limit
               })
 
-              url = "https://api.stlouisfed.org/fred/series/observations?" + params
+              url = (
+                  "https://api.stlouisfed.org/"
+                  "fred/series/observations?"
+                  + params
+              )
 
               with urllib.request.urlopen(url) as response:
                   data = json.load(response)
@@ -59,35 +63,103 @@ jobs:
 
 
           # =========================
-          # 市場データ
-          # =========================
-
-          sp500 = get_series("SP500", 10)[0]
-
-          nasdaq100 = get_series(
-              "NASDAQ100",
-              10
-          )[0]
-
-          vix = get_series(
-              "VIXCLS",
-              10
-          )[0]
-
-          usdjpy = get_series(
-              "DEXJPUS",
-              10
-          )[0]
-
-
-          # =========================
-          # S&P500 200日移動平均
+          # 市場データ取得
           # =========================
 
           sp500_history = get_series(
               "SP500",
               300
           )
+
+          nasdaq100_history = get_series(
+              "NASDAQ100",
+              10
+          )
+
+          vix_history = get_series(
+              "VIXCLS",
+              10
+          )
+
+          usdjpy_history = get_series(
+              "DEXJPUS",
+              10
+          )
+
+          yield_curve_history = get_series(
+              "T10Y2Y",
+              10
+          )
+
+          high_yield_history = get_series(
+              "BAMLH0A0HYM2",
+              10
+          )
+
+          initial_claims_history = get_series(
+              "ICSA",
+              10
+          )
+
+
+          # =========================
+          # 最新値
+          # =========================
+
+          sp500 = sp500_history[0]
+          nasdaq100 = nasdaq100_history[0]
+          vix = vix_history[0]
+          usdjpy = usdjpy_history[0]
+          yield_curve = yield_curve_history[0]
+          high_yield_spread = high_yield_history[0]
+          initial_claims = initial_claims_history[0]
+
+
+          # =========================
+          # 前日値
+          # =========================
+
+          if len(sp500_history) < 2:
+              raise RuntimeError(
+                  "Not enough S&P500 history"
+              )
+
+          if len(vix_history) < 2:
+              raise RuntimeError(
+                  "Not enough VIX history"
+              )
+
+          if len(high_yield_history) < 2:
+              raise RuntimeError(
+                  "Not enough High Yield history"
+              )
+
+          sp500_prev = sp500_history[1]
+          vix_prev = vix_history[1]
+          high_yield_prev = high_yield_history[1]
+
+
+          # =========================
+          # 前日比・前日差
+          # =========================
+
+          sp500_daily_change = (
+              (sp500 / sp500_prev) - 1
+          ) * 100
+
+          vix_daily_change = (
+              (vix / vix_prev) - 1
+          ) * 100
+
+          high_yield_daily_change = (
+              high_yield_spread
+              - high_yield_prev
+          )
+
+
+          # =========================
+          # S&P500 200日移動平均
+          # =========================
 
           if len(sp500_history) < 200:
               raise RuntimeError(
@@ -107,31 +179,33 @@ jobs:
 
 
           # =========================
-          # 景気・信用リスク
+          # 急変スコア
+          # 0～6点
           # =========================
 
-          # 米10年債 - 2年債
-          yield_curve = get_series(
-              "T10Y2Y",
-              10
-          )[0]
+          sudden_score = 0
 
-          # 米ハイイールド債
-          # オプション調整後スプレッド
-          high_yield_spread = get_series(
-              "BAMLH0A0HYM2",
-              10
-          )[0]
+          # S&P500下落
+          if sp500_daily_change <= -3:
+              sudden_score += 2
+          elif sp500_daily_change <= -2:
+              sudden_score += 1
 
-          # 新規失業保険申請件数
-          initial_claims = get_series(
-              "ICSA",
-              10
-          )[0]
+          # VIX急上昇
+          if vix_daily_change >= 30:
+              sudden_score += 2
+          elif vix_daily_change >= 15:
+              sudden_score += 1
+
+          # 信用スプレッド急拡大
+          if high_yield_daily_change >= 0.50:
+              sudden_score += 2
+          elif high_yield_daily_change >= 0.25:
+              sudden_score += 1
 
 
           # =========================
-          # market.json 更新
+          # market.json 読み込み
           # =========================
 
           with open(
@@ -140,6 +214,11 @@ jobs:
               encoding="utf-8"
           ) as f:
               market = json.load(f)
+
+
+          # =========================
+          # market.json 更新
+          # =========================
 
           market["sp500"] = round(
               sp500,
@@ -185,6 +264,27 @@ jobs:
               initial_claims
           )
 
+          market["sp500_daily_change"] = round(
+              sp500_daily_change,
+              2
+          )
+
+          market["vix_daily_change"] = round(
+              vix_daily_change,
+              2
+          )
+
+          market["high_yield_daily_change"] = round(
+              high_yield_daily_change,
+              2
+          )
+
+          market["sudden_score"] = sudden_score
+
+
+          # =========================
+          # market.json 保存
+          # =========================
 
           with open(
               "market.json",
@@ -250,6 +350,30 @@ jobs:
           print(
               "Initial Claims:",
               market["initial_claims"]
+          )
+
+          print(
+              "S&P500 Daily Change:",
+              market["sp500_daily_change"],
+              "%"
+          )
+
+          print(
+              "VIX Daily Change:",
+              market["vix_daily_change"],
+              "%"
+          )
+
+          print(
+              "High Yield Daily Change:",
+              market["high_yield_daily_change"],
+              "%"
+          )
+
+          print(
+              "Sudden Score:",
+              market["sudden_score"],
+              "/ 6"
           )
 
           PY

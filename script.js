@@ -195,6 +195,24 @@ document.getElementById("action2").textContent =
 document.getElementById("aiComment").textContent =
   comment;
 
+// ===== 判定理由 =====
+
+let reasonText = "";
+
+if (reasons.length === 0) {
+  reasonText =
+    "・VIXは安定しています\n" +
+    "・S&P500は200日移動平均線より上です\n" +
+    "・ハイイールド債スプレッドは低水準です";
+} else {
+  reasonText = reasons
+    .map(reason => "・" + reason)
+    .join("\n");
+}
+
+document.getElementById("riskReasons").textContent =
+  reasonText;
+
 // ===== 市場状況 =====
 
 // 市場トレンド
