@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get S&P500 from FRED
+      - name: Get market data from FRED
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
@@ -28,41 +28,87 @@ jobs:
 
           api_key = os.environ["FRED_API_KEY"]
 
-          params = urllib.parse.urlencode({
-              "series_id": "SP500",
-              "api_key": api_key,
-              "file_type": "json",
-              "sort_order": "desc",
-              "limit": 10
-          })
+          def get_series(series_id, limit=10):
+              params = urllib.parse.urlencode({
+                  "series_id": series_id,
+                  "api_key": api_key,
+                  "file_type": "json",
+                  "sort_order": "desc",
+                  "limit": limit
+              })
 
-          url = "https://api.stlouisfed.org/fred/series/observations?" + params
+              url = "https://api.stlouisfed.org/fred/series/observations?" + params
 
-          with urllib.request.urlopen(url) as response:
-              data = json.load(response)
+              with urllib.request.urlopen(url) as response:
+                  data = json.load(response)
 
-          observations = data.get("observations", [])
+              values = []
 
-          sp500_value = None
+              for obs in data.get("observations", []):
+                  value = obs.get("value")
+                  if value and value != ".":
+                      values.append(float(value))
 
-          for obs in observations:
-              value = obs.get("value")
-              if value and value != ".":
-                  sp500_value = float(value)
-                  break
+              if not values:
+                  raise RuntimeError(
+                      f"{series_id} data could not be obtained: {data}"
+                  )
 
-          if sp500_value is None:
-              raise RuntimeError(f"S&P500 data could not be obtained: {data}")
+              return values
 
+          # 最新値
+          sp500 = get_series("SP500", 10)[0]
+          nasdaq100 = get_series("NASDAQ100", 10)[0]
+          vix = get_series("VIXCLS", 10)[0]
+          usdjpy = get_series("DEXJPUS", 10)[0]
+
+          # S&P500 200日移動平均
+          # 休日などの欠損を考えて300件取得
+          sp500_history = get_series("SP500", 300)
+
+          if len(sp500_history) < 200:
+              raise RuntimeError(
+                  f"Not enough S&P500 data for 200-day average: "
+                  f"{len(sp500_history)} observations"
+              )
+
+          sp500_200ma = sum(sp500_history[:200]) / 200
+
+          # market.json 読み込み
           with open("market.json", "r", encoding="utf-8") as f:
               market = json.load(f)
 
-          market["sp500"] = round(sp500_value, 2)
+          # 更新
+          market["sp500"] = round(sp500, 2)
+          market["nasdaq100"] = round(nasdaq100, 2)
+          market["vix"] = round(vix, 2)
+          market["usdjpy"] = round(usdjpy, 2)
+          market["sp500_200ma"] = round(sp500_200ma, 2)
+
+          # 200日線との乖離率
+          market["sp500_200ma_diff"] = round(
+              ((sp500 / sp500_200ma) - 1) * 100,
+              2
+          )
 
           with open("market.json", "w", encoding="utf-8") as f:
-              json.dump(market, f, ensure_ascii=False, indent=2)
+              json.dump(
+                  market,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
 
           print("S&P500:", market["sp500"])
+          print("NASDAQ100:", market["nasdaq100"])
+          print("VIX:", market["vix"])
+          print("USDJPY:", market["usdjpy"])
+          print("S&P500 200MA:", market["sp500_200ma"])
+          print(
+              "S&P500 vs 200MA:",
+              market["sp500_200ma_diff"],
+              "%"
+          )
           PY
 
       - name: Commit and push
