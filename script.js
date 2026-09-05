@@ -43,7 +43,7 @@ fetch("market.json")
   .then(data => {
     document.getElementById("weather").textContent = data.weather;
     document.getElementById("risk").textContent = "市場リスク：" + data.risk;
-    document.getElementById("sp500").textContent = "S&P500： " + data.sp500;
+    document.getElementById("sp500").textContent = "S&P500連動ETF(SPY)： " + data.sp500;
     document.getElementById("vix").textContent = "VIX： " + data.vix;
   })
   .catch(error => {
