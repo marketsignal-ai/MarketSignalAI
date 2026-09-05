@@ -46,6 +46,7 @@ jobs:
 
               for obs in data.get("observations", []):
                   value = obs.get("value")
+
                   if value and value != ".":
                       values.append(float(value))
 
@@ -56,42 +57,141 @@ jobs:
 
               return values
 
-          # 最新値
-          sp500 = get_series("SP500", 10)[0]
-          nasdaq100 = get_series("NASDAQ100", 10)[0]
-          vix = get_series("VIXCLS", 10)[0]
-          usdjpy = get_series("DEXJPUS", 10)[0]
 
+          # =========================
+          # 市場データ
+          # =========================
+
+          sp500 = get_series("SP500", 10)[0]
+
+          nasdaq100 = get_series(
+              "NASDAQ100",
+              10
+          )[0]
+
+          vix = get_series(
+              "VIXCLS",
+              10
+          )[0]
+
+          usdjpy = get_series(
+              "DEXJPUS",
+              10
+          )[0]
+
+
+          # =========================
           # S&P500 200日移動平均
-          # 休日などの欠損を考えて300件取得
-          sp500_history = get_series("SP500", 300)
+          # =========================
+
+          sp500_history = get_series(
+              "SP500",
+              300
+          )
 
           if len(sp500_history) < 200:
               raise RuntimeError(
-                  f"Not enough S&P500 data for 200-day average: "
-                  f"{len(sp500_history)} observations"
+                  "Not enough S&P500 data "
+                  "for 200-day average"
               )
 
-          sp500_200ma = sum(sp500_history[:200]) / 200
+          sp500_200ma = (
+              sum(sp500_history[:200])
+              / 200
+          )
 
-          # market.json 読み込み
-          with open("market.json", "r", encoding="utf-8") as f:
+          sp500_200ma_diff = (
+              (sp500 / sp500_200ma - 1)
+              * 100
+          )
+
+
+          # =========================
+          # 景気・信用リスク
+          # =========================
+
+          # 米10年債 - 2年債
+          yield_curve = get_series(
+              "T10Y2Y",
+              10
+          )[0]
+
+          # 米ハイイールド債
+          # オプション調整後スプレッド
+          high_yield_spread = get_series(
+              "BAMLH0A0HYM2",
+              10
+          )[0]
+
+          # 新規失業保険申請件数
+          initial_claims = get_series(
+              "ICSA",
+              10
+          )[0]
+
+
+          # =========================
+          # market.json 更新
+          # =========================
+
+          with open(
+              "market.json",
+              "r",
+              encoding="utf-8"
+          ) as f:
               market = json.load(f)
 
-          # 更新
-          market["sp500"] = round(sp500, 2)
-          market["nasdaq100"] = round(nasdaq100, 2)
-          market["vix"] = round(vix, 2)
-          market["usdjpy"] = round(usdjpy, 2)
-          market["sp500_200ma"] = round(sp500_200ma, 2)
-
-          # 200日線との乖離率
-          market["sp500_200ma_diff"] = round(
-              ((sp500 / sp500_200ma) - 1) * 100,
+          market["sp500"] = round(
+              sp500,
               2
           )
 
-          with open("market.json", "w", encoding="utf-8") as f:
+          market["nasdaq100"] = round(
+              nasdaq100,
+              2
+          )
+
+          market["vix"] = round(
+              vix,
+              2
+          )
+
+          market["usdjpy"] = round(
+              usdjpy,
+              2
+          )
+
+          market["sp500_200ma"] = round(
+              sp500_200ma,
+              2
+          )
+
+          market["sp500_200ma_diff"] = round(
+              sp500_200ma_diff,
+              2
+          )
+
+          market["yield_curve"] = round(
+              yield_curve,
+              2
+          )
+
+          market["high_yield_spread"] = round(
+              high_yield_spread,
+              2
+          )
+
+          market["initial_claims"] = int(
+              initial_claims
+          )
+
+
+          with open(
+              "market.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+
               json.dump(
                   market,
                   f,
@@ -99,16 +199,59 @@ jobs:
                   indent=2
               )
 
-          print("S&P500:", market["sp500"])
-          print("NASDAQ100:", market["nasdaq100"])
-          print("VIX:", market["vix"])
-          print("USDJPY:", market["usdjpy"])
-          print("S&P500 200MA:", market["sp500_200ma"])
+
+          # =========================
+          # 確認用ログ
+          # =========================
+
+          print(
+              "S&P500:",
+              market["sp500"]
+          )
+
+          print(
+              "NASDAQ100:",
+              market["nasdaq100"]
+          )
+
+          print(
+              "VIX:",
+              market["vix"]
+          )
+
+          print(
+              "USDJPY:",
+              market["usdjpy"]
+          )
+
+          print(
+              "S&P500 200MA:",
+              market["sp500_200ma"]
+          )
+
           print(
               "S&P500 vs 200MA:",
               market["sp500_200ma_diff"],
               "%"
           )
+
+          print(
+              "10Y-2Y:",
+              market["yield_curve"],
+              "%"
+          )
+
+          print(
+              "High Yield Spread:",
+              market["high_yield_spread"],
+              "%"
+          )
+
+          print(
+              "Initial Claims:",
+              market["initial_claims"]
+          )
+
           PY
 
       - name: Commit and push
