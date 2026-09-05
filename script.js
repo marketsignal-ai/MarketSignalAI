@@ -189,6 +189,19 @@ document.getElementById("risk").textContent =
 document.getElementById("riskScore").textContent =
   "Market Risk Score： " + score + " / 15";
 
+document.getElementById("suddenScore").textContent =
+  "急変スコア： " + data.sudden_score + " / 6";  
+
+const suddenElement = document.getElementById("suddenScore");
+
+if (data.sudden_score <= 1) {
+  suddenElement.style.color = "green";
+} else if (data.sudden_score <= 3) {
+  suddenElement.style.color = "orange";
+} else {
+  suddenElement.style.color = "red";
+}  
+
 document.getElementById("action1").textContent =
   action1;
 
