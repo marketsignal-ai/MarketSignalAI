@@ -89,6 +89,82 @@ fetch("market.json")
     } else {
       diffElement.style.color = "red";
     }
+// ===== Market Risk Score =====
+
+let score = 0;
+let reasons = [];
+
+// VIX
+if (data.vix >= 30) {
+  score += 3;
+  reasons.push("VIXが30以上");
+} else if (data.vix >= 25) {
+  score += 2;
+  reasons.push("VIXが25以上");
+} else if (data.vix >= 20) {
+  score += 1;
+  reasons.push("VIXが20以上");
+}
+
+// S&P500と200日移動平均
+if (data.sp500_200ma_diff <= -10) {
+  score += 3;
+  reasons.push("S&P500が200日線を10%以上下回る");
+} else if (data.sp500_200ma_diff <= -5) {
+  score += 2;
+  reasons.push("S&P500が200日線を5%以上下回る");
+} else if (data.sp500_200ma_diff < 0) {
+  score += 1;
+  reasons.push("S&P500が200日線を下回る");
+}
+
+// ハイイールド債スプレッド
+if (data.high_yield_spread >= 6) {
+  score += 3;
+  reasons.push("信用市場のストレスが非常に高い");
+} else if (data.high_yield_spread >= 5) {
+  score += 2;
+  reasons.push("信用市場のストレスが高い");
+} else if (data.high_yield_spread >= 4) {
+  score += 1;
+  reasons.push("信用市場に警戒感");
+}
+
+
+// ===== 総合判定 =====
+
+let weather;
+let risk;
+let comment;
+
+if (score >= 7) {
+  weather = "⛈️ 危険";
+  risk = "非常に高い";
+  comment =
+    "複数の市場指標が強い警戒シグナルを示しています。";
+} else if (score >= 5) {
+  weather = "🌧️ 警戒";
+  risk = "高い";
+  comment =
+    "市場ストレスが高まっています。値動きに注意してください。";
+} else if (score >= 3) {
+  weather = "☁️ 注意";
+  risk = "中程度";
+  comment =
+    "一部の指標に警戒シグナルが出ています。";
+} else {
+  weather = "☀️ 晴れ";
+  risk = "低い";
+  comment =
+    "主要な市場ストレス指標は現在落ち着いています。";
+}
+
+// ===== 画面表示 =====
+
+document.getElementById("weather").textContent = weather;
+document.getElementById("risk").textContent =
+  "リスク：" + risk;
+
 
   })
   .catch(error => {
