@@ -41,11 +41,28 @@ function changeWeather(type) {
 fetch("market.json")
   .then(response => response.json())
   .then(data => {
+
     document.getElementById("weather").textContent = data.weather;
-    document.getElementById("risk").textContent = "市場リスク：" + data.risk;
-    document.getElementById("sp500").textContent = "S&P500連動ETF(SPY)： " + data.sp500;
-    document.getElementById("vix").textContent = "VIX： " + data.vix;
+    document.getElementById("risk").textContent = data.risk;
+
+    document.getElementById("sp500").textContent =
+      "S&P500： " + data.sp500;
+
+    document.getElementById("nasdaq100").textContent =
+      "NASDAQ100： " + data.nasdaq100;
+
+    document.getElementById("vix").textContent =
+      "VIX： " + data.vix;
+
+    document.getElementById("usdjpy").textContent =
+      "ドル円： " + data.usdjpy;
+
+    document.getElementById("sp500_200ma").textContent =
+      "S&P500 200日移動平均： " + data.sp500_200ma;
+
+    document.getElementById("sp500_200ma_diff").textContent =
+      "200日線乖離率： " + data.sp500_200ma_diff + "%";
   })
   .catch(error => {
-    console.error("データの読み込みに失敗しました", error);
+    console.error("market.json 読み込みエラー:", error);
   });
