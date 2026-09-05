@@ -202,6 +202,17 @@ if (data.sudden_score <= 1) {
   suddenElement.style.color = "red";
 }  
 
+
+const suddenElement = document.getElementById("suddenScore");
+
+if (data.sudden_score <= 1) {
+  suddenElement.style.color = "green";
+} else if (data.sudden_score <= 3) {
+  suddenElement.style.color = "orange";
+} else {
+  suddenElement.style.color = "red";
+}  
+
 document.getElementById("action1").textContent =
   action1;
 
