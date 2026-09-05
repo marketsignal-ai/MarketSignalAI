@@ -195,7 +195,7 @@ document.getElementById("risk").textContent =
   "市場リスク：" + risk;
 
 document.getElementById("riskScore").textContent =
-  "Market Risk Score： " + score + " / 15";
+  "Base Risk Score： " + baseScore + " / 9";
 
 document.getElementById("suddenScore").textContent =
   "急変スコア： " + data.sudden_score + " / 6";  
@@ -207,7 +207,7 @@ document.getElementById("vixChange").textContent =
   "VIX 前日比： " + data.vix_daily_change + "%";
 
 document.getElementById("hyChange").textContent =
-  "HYスプレッド前日差： " + data.high_yield_daily_change + "%";
+  "HYスプレッド前日差： " + data.high_yield_daily_change + "pt";
 
 const sp500ChangeElement =
   document.getElementById("sp500Change");
