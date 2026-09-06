@@ -21,7 +21,8 @@ h1 {
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
 
 .card h2,
 .card h3 {
@@ -47,34 +48,148 @@ p {
     line-height: 1.8;
 }
 
-.weather-card{
-
+.weather-card {
     background: linear-gradient(135deg,#4facfe,#00c6fb);
-
-    color:white;
-
+    color: white;
 }
 
-.weather-card .risk{
-
-    color:white;
-
+.weather-card .risk {
+    color: white;
 }
 
-.weather-card h2{
-
-    color:white;
-
+.weather-card h2 {
+    color: white;
 }
 
 #riskReasons {
-  white-space: pre-line;
-  line-height: 1.8;
+    white-space: pre-line;
+    line-height: 1.8;
 }
 
 #suddenReasons {
-  white-space: pre-line;
-  line-height: 1.8;
+    white-space: pre-line;
+    line-height: 1.8;
+}
+
+/* Major Crash Risk V2 */
+.major-risk-card {
+    border: 2px solid #dfe7ef;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.major-risk-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.major-risk-header h2 {
+    margin-bottom: 0;
+}
+
+.experimental-badge {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #eef2f6;
+    color: #657382;
+}
+
+.major-action {
+    margin: 22px 0 10px;
+    text-align: center;
+    font-size: 28px;
+    line-height: 1.4;
+    font-weight: bold;
+}
+
+.major-message {
+    margin-top: 0;
+    font-size: 16px;
+    color: #4b5563;
+}
+
+.major-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.major-metric {
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(238, 243, 248, 0.75);
+}
+
+.major-metric span {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #66717d;
+}
+
+.major-metric strong {
+    display: block;
+    font-size: 16px;
+    line-height: 1.45;
+}
+
+.major-details {
+    margin-top: 18px;
+    border-top: 1px solid #e5e9ee;
+    padding-top: 14px;
+}
+
+.major-details summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.major-details p {
+    font-size: 15px;
+    margin: 8px 0;
+}
+
+.major-reasons {
+    margin-top: 14px;
+}
+
+#majorReasons {
+    margin-top: 8px;
+    white-space: pre-line;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.major-note {
+    margin: 16px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #777;
+}
+
+.major-risk-card.major-low {
+    border-color: #9fd6ae;
+}
+
+.major-risk-card.major-warning {
+    border-color: #f1bd67;
+    background: #fffaf1;
+}
+
+.major-risk-card.major-danger {
+    border-color: #e79a9a;
+    background: #fff6f6;
+}
+
+.major-risk-card.major-late {
+    border-color: #d4ad72;
+    background: #fff9ee;
 }
 
 .footer {
@@ -84,4 +199,26 @@ p {
     font-size: 12px;
     line-height: 1.6;
     color: #777;
+}
+
+@media (max-width: 520px) {
+    body {
+        padding: 18px 12px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .weather {
+        font-size: 52px;
+    }
+
+    .major-action {
+        font-size: 24px;
+    }
+
+    .major-grid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -4,101 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Signal AI</title>
-
-    <link rel="stylesheet" href="style.css"> </head>
+    <link rel="stylesheet" href="style.css?v=2.0">
+</head>
 
 <body>
     <div class="container">
 
-    <h1>📈 Market Signal AI</h1>
+        <h1>📈 Market Signal AI</h1>
 
-    <div class="card weather-card">
-
-        <h2>☀️ 市場の天気</h2>
-
-        <div class="weather" id="weather">
-            ☀️晴れ
+        <div class="card weather-card">
+            <h2>☀️ 市場の天気</h2>
+            <div class="weather" id="weather">☀️晴れ</div>
+            <div class="risk" id="risk">市場リスク：低</div>
         </div>
 
-        <div class="risk" id="risk">
-            市場リスク：低
+        <div class="card major-risk-card">
+            <div class="major-risk-header">
+                <h2>🚨 Major Crash Risk V2</h2>
+                <span class="experimental-badge">試験運用</span>
+            </div>
+
+            <div class="major-action" id="majorAction">読み込み中...</div>
+            <p class="major-message" id="majorMessage">V2データを確認しています。</p>
+
+            <div class="major-grid">
+                <div class="major-metric">
+                    <span>構造悪化型</span>
+                    <strong id="majorStructural">---</strong>
+                </div>
+                <div class="major-metric">
+                    <span>急変型</span>
+                    <strong id="majorShock">---</strong>
+                </div>
+                <div class="major-metric">
+                    <span>直近高値から</span>
+                    <strong id="majorDrawdown">---</strong>
+                </div>
+                <div class="major-metric">
+                    <span>確認状態</span>
+                    <strong id="majorConfirmed">---</strong>
+                </div>
+            </div>
+
+            <details class="major-details">
+                <summary>V2の詳細を見る</summary>
+                <p id="major200maDiff">S&P500 vs 200DMA：---</p>
+                <p id="majorBaa10y">BAA10Y：---</p>
+                <p id="majorSp500Change20d">S&P500 20日変化率：---</p>
+                <p id="majorVixChange20d">VIX 20日変化率：---</p>
+                <p id="majorAsOf">データ基準日：---</p>
+
+                <div class="major-reasons">
+                    <strong>判定理由</strong>
+                    <div id="majorReasons">---</div>
+                </div>
+            </details>
+
+            <p class="major-note">
+                V2は試験運用中のリスク指標です。売買を自動決定するものではありません。
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>市場データ</h2>
+            <p id="sp500">S&P500：---</p>
+            <p id="nasdaq100">NASDAQ100：---</p>
+            <p id="vix">VIX：---</p>
+            <p id="usdjpy">ドル円：---</p>
+            <p id="sp500_200ma">S&P500 200日移動平均：---</p>
+            <p id="sp500_200ma_diff">200日線乖離率：---</p>
+            <p id="yield_curve">長短金利差（10年-2年）：---</p>
+            <p id="high_yield_spread">ハイイールド債スプレッド：---</p>
+            <p id="initial_claims">新規失業保険申請件数：---</p>
+            <p id="riskScore">Base Risk Score：---</p>
+            <p id="suddenScore">急変スコア：---</p>
+            <p id="sp500Change">S&P500 前日比：---</p>
+            <p id="vixChange">VIX 前日比：---</p>
+            <p id="hyChange">HYスプレッド前日差：---</p>
+            <div id="suddenReasons">---</div>
+        </div>
+
+        <div class="card">
+            <h3>✅ 今週の行動</h3>
+            <p id="action1">積立継続</p>
+            <p id="action2">売却不要</p>
+        </div>
+
+        <div class="card">
+            <h3>📊 市場状況</h3>
+            <p id="trendStatus">🟢 市場トレンド</p>
+            <p id="sentimentStatus">🟢 市場心理</p>
+            <p id="economyStatus">🟢 景気</p>
+            <p id="fxStatus">🟢 為替</p>
+        </div>
+
+        <div class="card">
+            <h3>🤖 AIコメント</h3>
+            <p id="aiComment">---</p>
+        </div>
+
+        <div class="card">
+            <h3>🧠 判定理由</h3>
+            <div id="riskReasons">---</div>
         </div>
 
     </div>
 
-    <div class="card">
-        <h2>市場データ</h2>
+    <footer class="footer">
+        <p>Data provided via the FRED® API.</p>
+        <p>
+            This product uses the FRED® API but is not endorsed or certified
+            by the Federal Reserve Bank of St. Louis.
+        </p>
+        <p>
+            Market Signal AI is for informational purposes only and does not
+            constitute investment advice.
+        </p>
+    </footer>
 
-        <p id="sp500">S&P500：---</p>
-        <p id="nasdaq100">NASDAQ100：---</p>
-        <p id="vix">VIX：---</p>
-        <p id="usdjpy">ドル円：---</p>
-        <p id="sp500_200ma">S&P500 200日移動平均：---</p>
-        <p id="sp500_200ma_diff">200日線乖離率：---</p>
-        <p id="yield_curve">長短金利差（10年-2年）：---</p>
-        <p id="high_yield_spread">ハイイールド債スプレッド：---</p>
-        <p id="initial_claims">新規失業保険申請件数：---</p>
-        <p id="riskScore">Base Risk Score：---</p>
-        <p id="suddenScore">急変スコア：---</p>
-        <p id="sp500Change">S&P500 前日比：---</p>
-        <p id="vixChange">VIX 前日比：---</p>
-        <p id="hyChange">HYスプレッド前日差：---</p>
-        <div id="suddenReasons">---</div>
-    </div>
- 
-    <div class="card">
-
-        <h3>✅ 今週の行動</h3>
-        <p id="action1">積立継続</p>
-        <p id="action2">売却不要</p>
-
-    </div>
-
-    <div class="card">
-
-       <h3>📊 市場状況</h3>
-
-       <p id="trendStatus">🟢 市場トレンド</p>
-
-       <p id="sentimentStatus">🟢 市場心理</p>
-
-       <p id="economyStatus">🟢 景気</p>
-
-       <p id="fxStatus">🟢 為替</p>
-
-    </div>
-
-
-    <div class="card">
-
-        <h3>🤖 AIコメント</h3>
-
-        <p id="aiComment">---</p>
-
-    </div>
-
-<div class="card">
-    <h3>🧠 判定理由</h3>
-    <div id="riskReasons">---</div>
-</div>
-
-</div>
-
-<footer class="footer">
-    <p>
-        Data provided via the FRED® API.
-    </p>
-    <p>
-        This product uses the FRED® API but is not endorsed or certified
-        by the Federal Reserve Bank of St. Louis.
-    </p>
-    <p>
-        Market Signal AI is for informational purposes only and does not
-        constitute investment advice.
-    </p>
-</footer>
-
-    <script src="script.js?v=1.0"></script>
-
+    <script src="script.js?v=2.0"></script>
 </body>
 </html>
