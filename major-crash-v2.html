@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Major Crash Risk V2</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+      line-height: 1.6;
+      background: #f5f5f5;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+    h1, h2 { margin-top: 0; }
+    .action {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin: 12px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .metric {
+      background: #f7f7f7;
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .metric b {
+      display: block;
+      font-size: 1.15rem;
+    }
+    .small {
+      font-size: .88rem;
+      opacity: .72;
+    }
+    ul { padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+  <h1>Market Signal AI</h1>
+
+  <div class="card">
+    <h2>🚨 Major Crash Risk V2</h2>
+    <div id="action" class="action">読み込み中…</div>
+    <div id="message"></div>
+    <p id="asof" class="small"></p>
+  </div>
+
+  <div class="card">
+    <h2>判定</h2>
+    <div class="grid">
+      <div class="metric">
+        構造悪化型
+        <b id="structural">—</b>
+      </div>
+      <div class="metric">
+        急変型
+        <b id="shock">—</b>
+      </div>
+      <div class="metric">
+        直近高値から
+        <b id="dd">—</b>
+      </div>
+      <div class="metric">
+        S&P500 vs 200DMA
+        <b id="ma">—</b>
+      </div>
+      <div class="metric">
+        BAA10Y
+        <b id="baa">—</b>
+      </div>
+      <div class="metric">
+        S&P500 20日
+        <b id="sp20">—</b>
+      </div>
+      <div class="metric">
+        VIX 20日
+        <b id="vix20">—</b>
+      </div>
+      <div class="metric">
+        2/5日確認
+        <b id="confirm">—</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>理由</h2>
+    <ul id="reasons"></ul>
+    <p class="small">
+      試験運用中のリスク指標です。将来の暴落を保証して予測するものではなく、
+      投資助言ではありません。
+    </p>
+  </div>
+
+  <script>
+    const pct = (v) =>
+      v == null ? "—" : `${Number(v).toFixed(2)}%`;
+
+    const num = (v) =>
+      v == null ? "—" : Number(v).toFixed(2);
+
+    fetch(`market.json?t=${Date.now()}`)
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(data => {
+        const v = data.majorCrashV2;
+
+        if (!v) {
+          throw new Error(
+            "market.json に majorCrashV2 がありません"
+          );
+        }
+
+        document.getElementById("action").textContent =
+          v.actionJa;
+
+        document.getElementById("message").textContent =
+          v.message;
+
+        document.getElementById("asof").textContent =
+          `データ基準日: ${v.asOf}`;
+
+        document.getElementById("structural").textContent =
+          v.structural.confirmed
+            ? `⚠️ 確認済み (${v.structural.countLast5}/5)`
+            : `○ 未確認 (${v.structural.countLast5}/5)`;
+
+        document.getElementById("shock").textContent =
+          v.shock.confirmed
+            ? `⚠️ 確認済み (${v.shock.countLast5}/5)`
+            : `○ 未確認 (${v.shock.countLast5}/5)`;
+
+        document.getElementById("dd").textContent =
+          pct(v.metrics.drawdownFromPeakPct);
+
+        document.getElementById("ma").textContent =
+          pct(v.metrics.sp500_200maDiffPct);
+
+        document.getElementById("baa").textContent =
+          num(v.metrics.baa10y);
+
+        document.getElementById("sp20").textContent =
+          pct(v.metrics.sp500Change20dPct);
+
+        document.getElementById("vix20").textContent =
+          pct(v.metrics.vixChange20dPct);
+
+        document.getElementById("confirm").textContent =
+          v.confirmed ? "⚠️ Major Risk" : "○ HOLD";
+
+        const reasons =
+          document.getElementById("reasons");
+
+        reasons.innerHTML = "";
+
+        for (const reason of v.reasons) {
+          const li = document.createElement("li");
+          li.textContent = reason;
+          reasons.appendChild(li);
+        }
+      })
+      .catch(err => {
+        document.getElementById("action").textContent =
+          "データ取得エラー";
+
+        document.getElementById("message").textContent =
+          err.message;
+      });
+  </script>
+</body>
+</html>

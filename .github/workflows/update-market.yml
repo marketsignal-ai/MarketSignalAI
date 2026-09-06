@@ -378,7 +378,13 @@ jobs:
 
           PY
 
+      - name: Update Major Crash Risk V2
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python update_major_crash_v2.py
+
       - name: Commit and push
+
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
