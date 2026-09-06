@@ -26,6 +26,9 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python backtest.py
 
+      - name: Run strategy backtest
+        run: python strategy_backtest.py
+
       - name: Upload result
         uses: actions/upload-artifact@v4
         with:
@@ -33,3 +36,5 @@ jobs:
           path: |
             long_backtest_results.csv
             crisis_snapshots.csv
+            strategy_trades.csv
+v
