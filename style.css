@@ -76,3 +76,12 @@ p {
   white-space: pre-line;
   line-height: 1.8;
 }
+
+.footer {
+    margin: 30px 15px;
+    padding: 20px 10px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #777;
+}
