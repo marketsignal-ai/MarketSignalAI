@@ -36,5 +36,7 @@ jobs:
           path: |
             long_backtest_results.csv
             crisis_snapshots.csv
-            strategy_trades.csv
-            strategy_comparison.csv
+            strategy_comparison_v2.csv
+            strategy_trades_v2.csv
+            blocked_signals_v2.csv
+            crisis_strategy_trades_v2.csv
