@@ -37,4 +37,3 @@ jobs:
             long_backtest_results.csv
             crisis_snapshots.csv
             strategy_trades.csv
-v
