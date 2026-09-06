@@ -378,7 +378,6 @@ jobs:
 
           PY
 
-                PY
 
       - name: Install pandas
         run: pip install pandas
