@@ -14,5 +14,57 @@
   "sp500_daily_change": -0.38,
   "vix_daily_change": -5.79,
   "high_yield_daily_change": -0.01,
-  "sudden_score": 0
+  "sudden_score": 0,
+  "majorCrashV2": {
+    "version": "2.0-experimental",
+    "asOf": "2026-09-04",
+    "dataStaleDays": 2,
+    "confirmed": false,
+    "structural": {
+      "rawToday": false,
+      "confirmed": false,
+      "countLast5": 0,
+      "requiredCount": 2
+    },
+    "shock": {
+      "rawToday": false,
+      "confirmed": false,
+      "countLast5": 0,
+      "requiredCount": 2
+    },
+    "metrics": {
+      "sp500": 7718.6,
+      "sp500_200ma": 7141.76,
+      "sp500_200maDiffPct": 8.08,
+      "baa10y": 1.57,
+      "sp500Change20dPct": -0.5,
+      "vix": 14.32,
+      "vixChange20dPct": -3.89,
+      "recent252dPeak": 7798.99,
+      "drawdownFromPeakPct": -1.03
+    },
+    "action": "HOLD",
+    "actionJa": "🟢 HOLD",
+    "level": "LOW",
+    "message": "Major Crash Risk V2は確認されていません。通常の長期保有を基本とする状態です。",
+    "reasons": [
+      "構造悪化型・急変型とも2/5日確認条件を満たしていません"
+    ],
+    "rules": {
+      "structural": {
+        "sp500_200maDiffPctLte": -3.0,
+        "baa10yGte": 2.5
+      },
+      "shock": {
+        "sp500Change20dPctLte": -7.0,
+        "vixChange20dPctGte": 60.0
+      },
+      "confirmation": {
+        "windowTradingDays": 5,
+        "requiredDays": 2
+      },
+      "lateEntryLimitPct": -15.0
+    },
+    "note": "Experimental risk indicator for informational use. It is not a validated prediction model or investment advice."
+  }
 }
