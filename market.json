@@ -18,7 +18,7 @@
   "majorCrashV2": {
     "version": "2.0-experimental",
     "asOf": "2026-09-04",
-    "dataStaleDays": 2,
+    "dataStaleDays": 3,
     "confirmed": false,
     "structural": {
       "rawToday": false,
