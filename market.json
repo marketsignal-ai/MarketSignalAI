@@ -1,25 +1,25 @@
 {
   "weather": "☀️ 晴れ",
   "risk": "低",
-  "sp500": 7201.09,
+  "sp500": 7182.78,
   "nasdaq100": 26046.9,
-  "vix": 26.36,
+  "vix": 26.8,
   "usdjpy": 158.76,
   "comment": "市場は健全です。積立を継続しましょう。",
-  "sp500_200ma": 7351.29,
-  "sp500_200ma_diff": -2.04,
+  "sp500_200ma": 7352.49,
+  "sp500_200ma_diff": -2.31,
   "yield_curve": 0.24,
   "high_yield_spread": 3.72,
   "initial_claims": 189000,
-  "sp500_daily_change": -0.5,
-  "vix_daily_change": -0.98,
+  "sp500_daily_change": -0.25,
+  "vix_daily_change": -5.27,
   "high_yield_daily_change": 0.09,
   "sudden_score": 0,
   "majorCrashV2": {
     "version": "2.0-experimental",
-    "asOf": "2026-11-24",
+    "asOf": "2026-11-25",
     "dataStaleDays": 2,
-    "confirmed": false,
+    "confirmed": true,
     "structural": {
       "rawToday": false,
       "confirmed": false,
@@ -27,28 +27,28 @@
       "requiredCount": 2
     },
     "shock": {
-      "rawToday": false,
-      "confirmed": false,
-      "countLast5": 1,
+      "rawToday": true,
+      "confirmed": true,
+      "countLast5": 2,
       "requiredCount": 2
     },
     "metrics": {
-      "sp500": 7201.09,
-      "sp500_200ma": 7351.29,
-      "sp500_200maDiffPct": -2.04,
+      "sp500": 7182.78,
+      "sp500_200ma": 7352.49,
+      "sp500_200maDiffPct": -2.31,
       "baa10y": 1.61,
-      "sp500Change20dPct": -6.75,
-      "vix": 26.36,
-      "vixChange20dPct": 50.46,
+      "sp500Change20dPct": -7.25,
+      "vix": 28.29,
+      "vixChange20dPct": 67.3,
       "recent252dPeak": 7818.93,
-      "drawdownFromPeakPct": -7.9
+      "drawdownFromPeakPct": -8.14
     },
-    "action": "HOLD",
-    "actionJa": "🟢 HOLD",
-    "level": "LOW",
-    "message": "Major Crash Risk V2は確認されていません。通常の長期保有を基本とする状態です。",
+    "action": "EVACUATION_CONSIDER",
+    "actionJa": "🟠 退避検討",
+    "level": "HIGH",
+    "message": "Major Crash Risk V2が確認されています。直近高値からの下落が15%以内なので、退避を検討できる領域です。",
     "reasons": [
-      "構造悪化型・急変型とも2/5日確認条件を満たしていません"
+      "急変型：S&P500の20日下落率とVIXの20日上昇率が警戒条件"
     ],
     "rules": {
       "structural": {
